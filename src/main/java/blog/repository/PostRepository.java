@@ -44,4 +44,25 @@ public interface PostRepository extends CrudRepository<Post, Integer>{
 
     @Query(nativeQuery = true,value="select * from comments where post_id=?1")
     Iterable<String> getCommentbyPost(int id);
+
+
+
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,value="delete from comments where post_id=?1 ")
+    void deleteCommentsById(Long id);
+
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,value="delete from likes where post_id=?1 ")
+    void deleteLikesById(Long id);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,value="delete from post where id=?1 ")
+    void deletePostById(Long id);
+
+
 }

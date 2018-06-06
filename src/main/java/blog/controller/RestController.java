@@ -6,6 +6,7 @@ import blog.repository.UserRepository;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,7 +16,6 @@ public class RestController {
 
     @Autowired
     PostRepository postRepo;
-
 
     @Autowired
     UserRepository userRepo;
@@ -124,15 +124,31 @@ public class RestController {
         }
         Long commentsId = System.currentTimeMillis() % 1000;
 
-        postRepo.addComment(commentsId,postId,uname,comment);
+        postRepo.addComment(commentsId, postId, uname, comment);
 
-        return "You commented on postId "+postId+" successfully";
+        return "You commented on postId " + postId + " successfully";
 
     }
+
     @GetMapping("/api/getComments/")
     public Iterable<String> getAllComments(@RequestParam("postid") int id) {
-        return  postRepo.getCommentbyPost(id);
+        return postRepo.getCommentbyPost(id);
     }
 
+    @DeleteMapping("/api/deletepost/")
+    public String deletePosts(@RequestParam("id") Long postId, @RequestParam("username") String uname, @RequestParam("password") String password) {
+
+        if((userRepo.getUserRole(uname)== null)){
+            return "You do not have rights to delete a post";
+        }
+        if (password.equals(userRepo.findUserPassword(uname))){
+            postRepo.deleteCommentsById(postId);
+            postRepo.deleteLikesById(postId);
+            postRepo.deletePostById(postId);
+            return "Post deleted successfully";
+        }
+        else
+            return "Invalid credentials";
+    }
 }
 

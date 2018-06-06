@@ -22,4 +22,7 @@ public interface UserRepository extends CrudRepository<User, String> {
     @Query(nativeQuery = true,value="SELECT passwordhash FROM users WHERE UPPER(username)= UPPER(?1)")
     String findUserPassword(String user1);
 
+    @Query(nativeQuery = true,value="select role from users where username=?1")
+    String getUserRole(String uname);
+
 }
