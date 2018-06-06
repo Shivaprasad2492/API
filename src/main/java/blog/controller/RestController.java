@@ -79,8 +79,9 @@ public class RestController {
         postRepo.editPostValues(body, title, postId);
         return "the edits have been updated for the posts with new title" + title;
     }
+
     @PostMapping("/api/addLikes/")
-    public String likePost(@RequestParam("username") String uname,@RequestParam("password") String password,@RequestParam("post id") Long postId) {
+    public String likePost(@RequestParam("username") String uname, @RequestParam("password") String password, @RequestParam("post id") Long postId) {
 
         if (postRepo.findPostById(postId) == null) {
             return "There is no post with " + postId + " in the existing database";
@@ -94,19 +95,44 @@ public class RestController {
             return "Invalid credentials";
         }
 
-       Long likesId = System.currentTimeMillis()%1000;
+        Long likesId = System.currentTimeMillis() % 1000;
 
-        if(postRepo.checkLikes(postId, uname)==null){
+        if (postRepo.checkLikes(postId, uname) == null) {
 
-            postRepo.addLikes(likesId,postId,uname);
+            postRepo.addLikes(likesId, postId, uname);
 
-            return "You liked postId "+postId+" successfully";
-        }
-        else
+            return "You liked postId " + postId + " successfully";
+        } else
             return uname + " has already liked this post";
     }
+
     @GetMapping("/api/getLikes/")
     public Iterable<String> getAllLikes(@RequestParam("postid") int id) {
-        return  postRepo.getLikesbyPost(id);
+        return postRepo.getLikesbyPost(id);
     }
+
+    @PostMapping("/api/addComments/")
+    public String commentOnPost(@RequestParam("username") String uname, @RequestParam("password") String password, @RequestParam("comment") String comment, @RequestParam("postid") int postId) {
+
+        String passwordByUser = String.valueOf(userRepo.findUserPassword(uname));
+
+        String sha256hex = Hashing.sha256()
+                .hashString(password, Charsets.US_ASCII)
+                .toString();
+        if (!(sha256hex.equalsIgnoreCase(passwordByUser))) {
+            return "Invalid credentials";
+        }
+        Long commentsId = System.currentTimeMillis() % 1000;
+
+        postRepo.addComment(commentsId,postId,uname,comment);
+
+        return "You commented on postId "+postId+" successfully";
+
+    }
+    @GetMapping("/api/getComments/")
+    public Iterable<String> getAllComments(@RequestParam("postid") int id) {
+        return  postRepo.getCommentbyPost(id);
+    }
+
 }
+

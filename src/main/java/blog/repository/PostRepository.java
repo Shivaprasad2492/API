@@ -36,4 +36,12 @@ public interface PostRepository extends CrudRepository<Post, Integer>{
 
     @Query(nativeQuery = true, value="select id from likes where post_id = ?1 AND user_username=?2")
     Long checkLikes(Long postId,String uname);
+
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,value="insert into comments (id,post_id,user_username,comment) values (?1,?2,?3,?4)")
+    void addComment(Long commentsId,int postid,String uname,String comment);
+
+    @Query(nativeQuery = true,value="select * from comments where post_id=?1")
+    Iterable<String> getCommentbyPost(int id);
 }
