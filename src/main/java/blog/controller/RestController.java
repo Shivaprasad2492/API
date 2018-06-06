@@ -1,6 +1,7 @@
 package blog.controller;
 
 import blog.model.Post;
+import blog.model.User;
 import blog.repository.PostRepository;
 import blog.repository.UserRepository;
 import com.google.common.base.Charsets;
