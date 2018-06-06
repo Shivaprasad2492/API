@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: site-head">
+    <title>Login</title>
+</head>
+
+<body>
+
+<header th:replace="layout :: logged-out" />
+<h1>Login in the Blog</h1>
+
+<form method="post" th:object="${registerNewUser}">
+    <div><label for="username">Username:</label></div>
+    <input id="username" type="text" name="username" th:value="*{username}" />
+
+    <div><label for="password" th:value="*{username}">Password:</label></div>
+    <input id="password" type="password" name="password" th:value="*{password}" />
+
+    <div><input type="submit" value="Login"/></div>
+</form>
+
+<footer th:replace="layout :: site-footer" />
+</body>
+</html>
